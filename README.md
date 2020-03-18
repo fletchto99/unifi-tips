@@ -1,6 +1,6 @@
 # Unifi Tips
 
-This repo contains a bunch of tip/tricks I use in my Unifi setup. I should note that I'm running the USG Pro.
+This repo contains a bunch of tip/tricks I use in my Unifi setup. I should note that I'm running the USG Pro. Sorry for how unformal it is, this is mostly just a guide for me so I remember what I change :)
 
 ## Custom Software
 
