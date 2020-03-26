@@ -258,6 +258,8 @@ Endpoint = <PUBLIC_IP/HOSTNAME>:443
 AllowedIPs = 0.0.0.0/0
 ```
 
+_Alternativly_ you can create that configuration file on the server and save it as `client.conf`. Then use `qrencode -t ansi client.conf` to print out the config to QR which can easily be scanned by most wireguard apps. Note you'll need to install qrencode on the usg with `apt-get install qrencode`, provided you have the repo setup as seen in the custom config section.
+
 Once you connect to the VPN should see that your internal IP is the one specified by the wireguard VPN and your public IP is the one of your USG.
 
 
