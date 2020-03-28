@@ -269,7 +269,21 @@ When updating everything in the `/opt` directory will be reset and all applicati
 
 It's okay that the `config.gateway.json` is still customized during the upgrade, this won't break anything. After the upgrade is complete all you need to do is follow the steps for each application above to re-install the application.
 
+# Misc commands
 
+**Renew IP**
+
+```
+disconnect interface pppoe2
+connect interface pppoe2
+```
+
+**Renew DDNS**
+
+```
+show dns dynamic status
+update dns dynamic interface pppoe2
+```
 
 # Questions/suggestions?
 
