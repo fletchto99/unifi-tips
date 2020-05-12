@@ -168,8 +168,8 @@ Lastly, all that's required is that you force re-provision your USG. To test you
 Credits to [this tutorial](https://graham.hayes.ie/posts/wireguard-%2B-unifi/) for helping me get it set up in the first place.
 
 - SSH into your USG and switch to the root account via `sudo -i`
-- Install the correct wireguard package from [Lochnair/vyatta-wireguard](https://github.com/Lochnair/vyatta-wireguard/releases)
-  - `curl -sL https://github.com/Lochnair/vyatta-wireguard/releases/download/<version>/wireguard-<board>-<version>.deb -o wg.deb`
+- Install the correct wireguard package from [wireguards/vyatta-wireguard](https://github.com/WireGuard/wireguard-vyatta-ubnt/releases)
+  - `curl -sL https://github.com/WireGuard/wireguard-vyatta-ubnt/releases/download/<version>/wireguard-<board>-<version>.deb -o wg.deb`
 - `dpkg -i wg.deb` to install wireguard
 
 Next we'll setup the auth configuration:
