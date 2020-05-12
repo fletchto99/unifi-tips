@@ -49,7 +49,7 @@ I've got servers running from within my network as well as a VPN so I use DDNS t
 
 - SSH into your router and switch to root via `sudo -i`
 - DDClient depends on a library, to install it you'll need to do: `apt-get install libdata-validate-ip-perl `
-- Next install the latest [ddclient](https://github.com/ddclient/ddclient) (3.9.1 at the time of writing): `curl -sL https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -o /usr/sbin/ddclient/`
+- Next install the latest [ddclient](https://github.com/ddclient/ddclient) (3.9.1 at the time of writing): `curl -sL https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -o /usr/sbin/ddclient`
 
 Now you'll need to setup your USG configuration file:
 
