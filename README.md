@@ -133,8 +133,8 @@ To setup the NAT rule as well as the DNSMasq options you can add the following t
           "bogus-priv",
           "expand-hosts",
           "domain-needed",
-          "1.0.0.1",
-          "1.1.1.1",
+          "server=1.0.0.1",
+          "server=1.1.1.1",
           "server=<USG_IP>#5053",
           "server=<PIHOLE_IP>#<PIHOLE_PORT>"
         ]
