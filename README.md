@@ -37,7 +37,13 @@ Once this is done, force re-provisioning and then SSH into your USG. Lastly run 
 
 **Note:** Never do a bulk upgrade (e.g. `apt-get upgrade`) as this can soft-brick the router requiring a factory reset to fix it.
 
-# Installing Custom Software
+# Automatic installation of software
+
+See the `update.sh` script in this repository. I recommend saving this script to `/config/scripts/update/update.sh`
+
+ It will automatically download and install `dnscrypt-proxy`, `wireguard`, `ddclient` as well as a few utilities such as `nano` and `dnsutils`.
+
+# Installing Custom Software (Manual)
 
 ## Nano
 
@@ -45,11 +51,15 @@ Assuming you've followed the steps above to setup the package repository all you
 
 ## DDNS
 
+### Installation
+
 I've got servers running from within my network as well as a VPN so I use DDNS to update my cloudflare DNS records auto-magically. Unfortunately the built-in DDNS client doesn't support cloudflare's new API - so we need to manually update the `ddclient` version. I was able to follow the instructions on [ubnt wiki](https://ubntwiki.com/notebook/cloudflare_ddns_configuration) to set this up.
 
 - SSH into your router and switch to root via `sudo -i`
 - DDClient depends on a library, to install it you'll need to do: `apt-get install libdata-validate-ip-perl `
 - Next install the latest [ddclient](https://github.com/ddclient/ddclient) (3.9.1 at the time of writing): `curl -sL https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -o /usr/sbin/ddclient`
+
+### config.gateway.json setup
 
 Now you'll need to setup your USG configuration file:
 
@@ -90,7 +100,7 @@ To test you can use `update dns dynamic interface <WAN_INTERFACE>` and to valida
 I've got an interesting DNS setup at home. Essentially I route all traffic through my USG which routes it through PiHole running on a separate server and then back to the USG for DNScrypt. I've got dnscrypt-proxy being used to route DNS via DNS over HTTPS to various resolvers, with the primary being cloudflare.
 
 
-### Installation:
+### Installation
 
 Installation is pretty straightforward. Essentially to need to download the binary and setup the configs. Here are some step by step instructions:
 
@@ -104,15 +114,17 @@ Installation is pretty straightforward. Essentially to need to download the bina
 - cleanup `rm dnscrypt.tar.gz && rm -r linux-mips64`
 - make the dnscrypt binary executable `chmod +x dnscrypt-proxy`
 - set ownership `chown root:root dnscrypt-proxy`
-- Upload the config from this repo `dnscrypt/dnscrypt-proxy.toml`
+- Upload the config from this repo `dnscrypt/dnscrypt-proxy.toml` to `/config/dns/dnscrypt-proxy.toml`
   - This will have DNSCrypt running on port `5053` - the USG runs dnsmasq on 53 so you can't run there
   - I use the following resolvers: ['cloudflare', 'quad9-dnscrypt-ip4-filter-pri', 'dnscrypt.ca-1-doh']
   - I use the following fallback resolvers: ['1.1.1.1:53', '8.8.8.8:53', '9.9.9.9:53']
-- Lastly, setup dnscrypt as a service `./dnscrypt-proxy -service install`
+- Lastly, setup dnscrypt as a service `./dnscrypt-proxy -config /config/dns/dnscrypt-proxy.toml -service install`
   - This will set dnscrypt as a service which will work across reboots
   - If you change the config use `sudo service dnscrypt-proxy restart`
 
-### Force traffic to use DNScrypt
+### Config.gateway.json setup
+
+You will need to make sure `/config/dns/dnscrypt-proxy.toml` is setup. If not you can follow the instructions from the installation section to setup the configuration file.
 
 I like to have all of my DNS traffic routed through DNScrypt and my PiHole which is running on another server. It even works for those pesky IoT devices which are hardcoded for their own DNS servers. Essentially DNS traffic in my setup looks like this:
 
@@ -167,12 +179,16 @@ Lastly, all that's required is that you force re-provision your USG. To test you
 
 ## Wireguard
 
+### Installation
+
 Credits to [this tutorial](https://graham.hayes.ie/posts/wireguard-%2B-unifi/) for helping me get it set up in the first place.
 
 - SSH into your USG and switch to the root account via `sudo -i`
 - Install the correct wireguard package from [wireguards/vyatta-wireguard](https://github.com/WireGuard/wireguard-vyatta-ubnt/releases)
   - `curl -sL https://github.com/WireGuard/wireguard-vyatta-ubnt/releases/download/<version>/wireguard-<board>-<version>.deb -o wg.deb`
 - `dpkg -i wg.deb` to install wireguard
+
+### config.gateway.json setup
 
 Next we'll setup the auth configuration:
 
@@ -267,9 +283,9 @@ Once you connect to the VPN should see that your internal IP is the one specifie
 
 # Firmware updates
 
-When updating everything in the `/opt` directory will be reset and all applications will be uninstalled. Before proceeding with the upgrade I recommend backing up your DNScrypt config as well as your wireguard configs in `/config/auth/wireguard`. I should note that the wireguard configs will survive the upgrade but I would recommend backing up everything just in case.
+When updating everything in the `/opt` directory will be reset and all applications will be uninstalled. Before proceeding with the upgrade I recommend backing up your DNScrypt config (`/config/dns/dnscrypt-proxy.toml`) as well as your wireguard configs (`/config/auth/wireguard`). I should note that the wireguard configs will survive the upgrade but I would recommend backing up everything just in case. It's okay that the `config.gateway.json` is still customized during the upgrade, this won't break anything. After the upgrade is complete all you need to do is follow the steps for each application above to re-install the application.
 
-It's okay that the `config.gateway.json` is still customized during the upgrade, this won't break anything. After the upgrade is complete all you need to do is follow the steps for each application above to re-install the application.
+To automate the upgrade process, after the update has completed you will noticed that the USG will be sitting in a "provisioning" state. That's because the usg doesn't have the `wg0` interface. Simply run the update script `/config/scripts/update/update.sh` to re-install the required software which will re-create the interface.
 
 # Misc commands
 
