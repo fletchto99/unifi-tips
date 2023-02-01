@@ -56,8 +56,8 @@ Assuming you've followed the steps above to setup the package repository all you
 I've got servers running from within my network as well as a VPN so I use DDNS to update my cloudflare DNS records auto-magically. Unfortunately the built-in DDNS client doesn't support cloudflare's new API - so we need to manually update the `ddclient` version. I was able to follow the instructions on [ubnt wiki](https://ubntwiki.com/notebook/cloudflare_ddns_configuration) to set this up.
 
 - SSH into your router and switch to root via `sudo -i`
-- DDClient depends on a library, to install it you'll need to do: `apt-get install libdata-validate-ip-perl `
-- Next install the latest [ddclient](https://github.com/ddclient/ddclient) (3.9.1 at the time of writing): `curl -sL https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -o /usr/sbin/ddclient`
+- DDClient depends on a library, to install it you'll need to do: `apt-get update && apt-get install libdata-validate-ip-perl `
+- Next install the latest [ddclient](https://github.com/ddclient/ddclient) (3.9.1 at the time of writing): `curl -sL https://raw.githubusercontent.com/ddclient/ddclient/6ae69a1ce688e8212b0973867b16af37f85172ef/ddclient -o /usr/sbin/ddclient`
 
 ### config.gateway.json setup
 
